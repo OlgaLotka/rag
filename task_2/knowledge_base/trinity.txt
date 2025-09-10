@@ -1,0 +1,1 @@
+[{'name': 'Hera', 'role': "The Oracle told me that I would fall in love, and that the man I loved would be The One. So you see? You can't be dead, because I love you. Now get up."}]
