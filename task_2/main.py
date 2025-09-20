@@ -2,23 +2,20 @@ from flask import Flask, request
 import requests
 from bs4 import BeautifulSoup
 import json 
-import re
+import os
+import logging
+from crontab import CronTab
 
-
-urls = {
-    "Neo":"https://matrix.fandom.com/wiki/Neo",
-    "Trinity":"https://matrix.fandom.com/wiki/Trinity",
-   # "Agent Brown": "https://matrix.fandom.com/wiki/Agent_Brown",
-    "Agent Smith": "https://matrix.fandom.com/wiki/Agent_Smith",
-    "Persephone": "https://matrix.fandom.com/wiki/Persephone",
-    "Seraph":"https://matrix.fandom.com/wiki/Seraph",
-    "Matrix" : "https://matrix.fandom.com/wiki/Matrix",
-    "The Architect" : "https://matrix.fandom.com/wiki/The_Architect",
-    "Morpheus": "https://matrix.fandom.com/wiki/Morpheus",
-    "The Oracle": "https://matrix.fandom.com/wiki/The_Oracle"
-    }
+def openJson(name):
+    with open(name, 'r') as input_file:
+        return json.load(input_file)
+    
+urls = openJson('task_2\\file_map.json')
 
 app = Flask(__name__)
+
+
+logger = logging.getLogger(__name__)
 
 def parse_user_datafile_bs(text, rename):
 
@@ -40,8 +37,7 @@ def parse_user_datafile_bs(text, rename):
 
 @app.route('/scrapy', methods=['GET'])
 def scrapy():
-    with open('task_2\\terms_map.json', 'r') as input_file:
-        rename = json.load(input_file)
+    rename = openJson('task_2\\terms_map.json')
         
     headers = {
             'User-Agent': 'PostmanRuntime/7.45.0'
@@ -54,9 +50,24 @@ def scrapy():
             t = parse_user_datafile_bs(r.text, rename)
             output_file.write(t)
 
-    return rename 
+    return rename
+
+
+@app.route('/check', methods=['GET'])
+def check():
+
+    cpt = sum([len(files) for r, d, files in os.walk("task_2\knowledge_base")])
+    if (len(urls) != cpt):
+        logger.info('Есть новые файлы')
+
+    return 200
 
 
 if __name__ == '__main__':
+    
+    cron = CronTab( log = logger)
+    job = cron.new(command="echo 'hello world'")
+    job.minute.every(1)
 
+    cron.write(filename='lo')
     app.run(host="0.0.0.0", port=8084, debug=True)
