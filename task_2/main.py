@@ -1,9 +1,10 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import requests
 from bs4 import BeautifulSoup
 import json 
 import os
 import logging
+import schedule
 from crontab import CronTab
 
 def openJson(name):
@@ -12,10 +13,11 @@ def openJson(name):
     
 urls = openJson('task_2\\file_map.json')
 
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
+
 app = Flask(__name__)
 
-
-logger = logging.getLogger(__name__)
 
 def parse_user_datafile_bs(text, rename):
 
@@ -23,8 +25,11 @@ def parse_user_datafile_bs(text, rename):
     
     text1 = soup.get_text(separator="", strip=False)
     text1.join(e for e in text1 if e.isalnum())
+    cleaned_text = "".join([char for char in text1 if char != "\n"])
+    cleaned_text2 = "".join([char for char in cleaned_text if char != "\t"])
+    #replace_text = cleaned_text2.translate(str.maketrans(rename))
     for k,v in rename.items():
-        text1.replace(k,v)
+        cleaned_text2 = cleaned_text2.replace(k,v)
         #name = soup.find('span', {'class': 'mw-page-title-main'}).next.replace(k,v)
         #role = soup.find('p', {'class': 'pull-quote__text'}).next.replace(k,v)
 #.find('div', {'class': 'mw-body-content'}
@@ -33,7 +38,7 @@ def parse_user_datafile_bs(text, rename):
         #data = json.loads(re.search("data\s+=\s+(\[.*?\])", script).group(1))
         #role2 = body.next.replace(k,v)
     #text1 = [item.strip() for item in text1 if str(item)]  
-    return text1
+    return cleaned_text2 
 
 @app.route('/scrapy', methods=['GET'])
 def scrapy():
@@ -52,22 +57,24 @@ def scrapy():
 
     return rename
 
-
-@app.route('/check', methods=['GET'])
 def check():
-
     cpt = sum([len(files) for r, d, files in os.walk("task_2\knowledge_base")])
     if (len(urls) != cpt):
-        logger.info('Есть новые файлы')
+        logger.info('new files is present')
+        #scrapy()
+    return cpt
 
-    return 200
+@app.route('/check', methods=['GET'])
+def check22():
+    count = check()
+    return jsonify(count)
 
 
 if __name__ == '__main__':
-    
-    cron = CronTab( log = logger)
-    job = cron.new(command="echo 'hello world'")
-    job.minute.every(1)
-
-    cron.write(filename='lo')
+    schedule.every().minute.do(check)
     app.run(host="0.0.0.0", port=8084, debug=True)
+    
+    while True:
+        schedule.run_pending()
+
+    
