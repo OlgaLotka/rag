@@ -4,18 +4,14 @@ from dotenv import load_dotenv
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-#from langchain_huggingface.llms import HuggingFacePipeline
 from langchain.chains import RetrievalQA
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.prompts import PromptTemplate
+from langchain_core.messages import HumanMessage
 import logging
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
-from langchain.prompts import PromptTemplate
-#from langchain_llm import HuggingFaceLLM
-from llama_index.llms.huggingface import HuggingFaceLLM
-#from langchain_llm import ChatHuggingFace
-#from llama_index.llms.huggingface import HuggingFaceLLM
-from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
-from langchain_community.llms import HuggingFaceHub
+
 from langchain_huggingface import HuggingFacePipeline
 
 #app = Flask(__name__)
@@ -62,49 +58,32 @@ async def find(update: Update, context: CallbackContext):
 
     comb_text = "\n".join(doc.page_content for doc in docs) 
 
-    #llm = HuggingFaceLLM(
-    #model_name= model_name,
-    #tokenizer_name=model_name,
-    #tokenizer_name="HuggingFaceH4/zephyr-7b-beta",
-    #generate_kwargs={"temperature": 0.7, "top_k": 50, "top_p": 0.95},
-    #messages_to_prompt=comb_text,
-    #completion_to_prompt=completion_to_prompt,
-    #device_map="auto",
-    #context_window = 512
-    #)
-
-    #chat_llm = ChatHuggingFace(llm=llm)
-    
-    #chat_llm.invoke(query)
-    #res = llm.complete(query)
-
-    llm = HuggingFaceEndpoint(
-    repo_id="microsoft/Phi-3-mini-4k-instruct",
-    task="text-generation",
-    max_new_tokens=512,
-    do_sample=False,
-    repetition_penalty=1.03,
-    )
-
-
-    chat_llm = ChatHuggingFace(llm=llm, verbose=True)
-    #document_chain = create_stuff_documents_chain(llm, prompt)
-    #retrieval_chain = create_retrieval_chain(retriever, document_chain)
-    #res = chat_llm(content = comb_text, messages= comb_text).invoke(query)
-
     llm = HuggingFacePipeline.from_model_id(
         model_id="gpt2",
         task="text-generation"
     )
+    prompt_template = ChatPromptTemplate([
+        ("system", "You are a helpful assistant"),
+        MessagesPlaceholder("query")
+    ])
+
+  #  prompt = prompt_template.format_prompt(query= [HumanMessage(content=query)]).to_string
+    QA_CHAIN_PROMPT = PromptTemplate(input_variables=["context"], template=" Context: {context} User")
+
+    
     qa_chain = RetrievalQA.from_llm(
     llm=llm,
-    retriever=ret
+    verbose=True,
+    retriever=ret,
+    prompt = QA_CHAIN_PROMPT
+    #type = 
+    #chain_type_kwargs={"prompt": QA_CHAIN_PROMPT}
     )
-    res = qa_chain.invoke(query)
-    await update.message.reply_text(res)
+    res = qa_chain.invoke({"System": "You are a helpful assistant ","context": "Only name return", "query": query})
+    await update.message.reply_text(res["result"], parse_mode="HTML")
 
 async def start(update: Update, context: CallbackContext):
-    await update.message.reply_text("Привет")
+    await update.message.reply_text("Hello, My name is The Oracle")
 
 async def unknown_handler(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text("Unknown commnd")
