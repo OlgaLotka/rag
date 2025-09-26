@@ -20,7 +20,7 @@ app = Flask(__name__)
 
 
 def parse_user_datafile_bs(text, rename):
-
+    logger.info(f"Start renaming")
     soup = BeautifulSoup(text, 'html.parser')
     
     text1 = soup.get_text(separator="", strip=False)
@@ -38,10 +38,12 @@ def parse_user_datafile_bs(text, rename):
         #data = json.loads(re.search("data\s+=\s+(\[.*?\])", script).group(1))
         #role2 = body.next.replace(k,v)
     #text1 = [item.strip() for item in text1 if str(item)]  
+    logger.info(f"Renaming is succsses")
     return cleaned_text2 
 
 @app.route('/scrapy', methods=['GET'])
 def scrapy():
+    logger.info(f"Start scraping")
     rename = openJson('task_2\\terms_map.json')
         
     headers = {
@@ -53,11 +55,13 @@ def scrapy():
         with open(filename, 'w', encoding="utf-8") as output_file:
             print(filename)
             t = parse_user_datafile_bs(r.text, rename)
+            logger.info(f"Parsing is succsses")
             output_file.write(t)
-
+            logger.info(f"Save is succsses")
     return rename
 
 def check():
+    logger.info(f"Find a new inem in file_map")
     cpt = sum([len(files) for r, d, files in os.walk("task_2\knowledge_base")])
     if (len(urls) != cpt):
         logger.info('new files is present')
@@ -71,6 +75,7 @@ def check22():
 
 
 if __name__ == '__main__':
+
     schedule.every().minute.do(check)
     app.run(host="0.0.0.0", port=8084, debug=True)
     

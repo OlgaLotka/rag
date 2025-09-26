@@ -1,5 +1,5 @@
 from flask import Flask, request
-import os
+import os, random, re
 from dotenv import load_dotenv
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -26,7 +26,7 @@ load_dotenv()
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 
 logger = logging.getLogger(__name__)
-#logging.basicConfig(level=logging.INFO, filename="bot_log.log",filemode="w")
+logging.basicConfig(level=logging.INFO, filename="bot_log.log",filemode="w", format="%(asctime)s %(levelname)s %(message)s")
 
 def generate_emb(name):
     splitter = RecursiveCharacterTextSplitter(chunk_size = 400, chunk_overlap = 50)
@@ -45,42 +45,56 @@ def save(chunks, meta):
     vector_store = FAISS.from_texts(chunks, model, meta)
     vector_store.save_local("local")
 
+def simple_question(question: str)->bool:
+    array = [
+        r"\b(hello|hi)\b",
+        r"\b(what`s up)\b",
+        r"\b(thank)\b",
+    ]
+    return any(re.search(p, question, re.IGNORECASE) for p in array)
 
 #@app.route('/query', methods=['GET'])
 async def find(update: Update, context: CallbackContext):
-    wait_anw = await update.message.reply_text("Wait a minute! Thinking...")
-    await context.bot.send_chat_action(action = "typing", chat_id = update.message.chat_id)
+
     #query = request.args.get('text')
     query = update.message.text
-    vector_store = FAISS.load_local("local",model,allow_dangerous_deserialization=True)
-    ret = vector_store.as_retriever(k=3, lambda_mult= 0.5)  
-    docs = ret.invoke(query)
+    user_id = update.effective_user.id
+    logger.info(f"new question {query} from {user_id}")
+    if simple_question(query):
+        res = random.choice(["The problem is choice", "Can I help you?", "Let me tell about something"])
+        await update.message.reply_text(res)
+    else:
+        wait_anw = await update.message.reply_text("Wait a minute! Thinking...")
+        await context.bot.send_chat_action(action = "typing", chat_id = update.message.chat_id)
+        vector_store = FAISS.load_local("local",model,allow_dangerous_deserialization=True)
+        ret = vector_store.as_retriever(k=3, lambda_mult= 0.5)  
+        docs = ret.invoke(query)
 
-    comb_text = "\n".join(doc.page_content for doc in docs) 
+        #comb_text = "\n".join(doc.page_content for doc in docs) 
 
-    llm = HuggingFacePipeline.from_model_id(
-        model_id="gpt2",
-        task="text-generation"
-    )
-    prompt_template = ChatPromptTemplate([
-        ("system", "You are a helpful assistant"),
-        MessagesPlaceholder("query")
-    ])
+        llm = HuggingFacePipeline.from_model_id(
+            model_id="gpt2",
+            task="text-generation"
+        )
+        prompt_template = ChatPromptTemplate([
+            ("system", "You are a helpful assistant"),
+            MessagesPlaceholder("query")
+        ])
 
-  #  prompt = prompt_template.format_prompt(query= [HumanMessage(content=query)]).to_string
-    QA_CHAIN_PROMPT = PromptTemplate(input_variables=["context"], template=" Context: {context} User")
+    #  prompt = prompt_template.format_prompt(query= [HumanMessage(content=query)]).to_string
+        QA_CHAIN_PROMPT = PromptTemplate(input_variables=["context"], template=" Context: {context} User")
 
-    
-    qa_chain = RetrievalQA.from_llm(
-    llm=llm,
-    verbose=True,
-    retriever=ret,
-    prompt = QA_CHAIN_PROMPT
-    #type = 
-    #chain_type_kwargs={"prompt": QA_CHAIN_PROMPT}
-    )
-    res = qa_chain.invoke({"System": "You are a helpful assistant ","context": "Only name return", "query": query})
-    await update.message.reply_text(res["result"], parse_mode="HTML")
+        
+        qa_chain = RetrievalQA.from_llm(
+        llm=llm,
+        verbose=True,
+        retriever=ret,
+        prompt = QA_CHAIN_PROMPT
+        #type = 
+        #chain_type_kwargs={"prompt": QA_CHAIN_PROMPT}
+        )
+        res = qa_chain.invoke({"System": "You are a helpful assistant ","context": "Only name return", "query": query})
+        await update.message.reply_text(res["result"], parse_mode="HTML")
 
 async def start(update: Update, context: CallbackContext):
     await update.message.reply_text("Hello, My name is The Oracle")
