@@ -1,0 +1,69 @@
+2025-09-27 18:10:51,895 WARNING  * Debugger is active!
+2025-09-27 18:10:51,899 INFO  * Debugger PIN: 144-033-726
+2025-09-27 18:11:44,261 INFO Start scraping
+2025-09-27 18:11:44,262 INFO Load by url https://matrix.fandom.com/wiki/Neo
+2025-09-27 18:11:45,195 INFO Start generate task_2\knowledge_base\Neo.txt
+2025-09-27 18:11:45,195 INFO Start renaming
+2025-09-27 18:11:50,002 INFO Renaming is succsses
+2025-09-27 18:11:50,003 INFO Parsing is succsses
+2025-09-27 18:11:50,003 INFO Save is succsses
+2025-09-27 18:11:50,004 INFO Load by url https://matrix.fandom.com/wiki/Trinity
+2025-09-27 18:11:50,498 INFO Start generate task_2\knowledge_base\Trinity.txt
+2025-09-27 18:11:50,499 INFO Start renaming
+2025-09-27 18:11:50,970 INFO Renaming is succsses
+2025-09-27 18:11:50,970 INFO Parsing is succsses
+2025-09-27 18:11:50,970 INFO Save is succsses
+2025-09-27 18:11:50,970 INFO Load by url https://matrix.fandom.com/wiki/Agent_Smith
+2025-09-27 18:11:51,771 INFO Start generate task_2\knowledge_base\Agent Smith.txt
+2025-09-27 18:11:51,771 INFO Start renaming
+2025-09-27 18:11:53,562 INFO Renaming is succsses
+2025-09-27 18:11:53,562 INFO Parsing is succsses
+2025-09-27 18:11:53,564 INFO Save is succsses
+2025-09-27 18:11:53,564 INFO Load by url https://matrix.fandom.com/wiki/Persephone
+2025-09-27 18:11:54,299 INFO Start generate task_2\knowledge_base\Persephone.txt
+2025-09-27 18:11:54,300 INFO Start renaming
+2025-09-27 18:11:54,539 INFO Renaming is succsses
+2025-09-27 18:11:54,539 INFO Parsing is succsses
+2025-09-27 18:11:54,539 INFO Save is succsses
+2025-09-27 18:11:54,539 INFO Load by url https://matrix.fandom.com/wiki/Seraph
+2025-09-27 18:11:55,308 INFO Start generate task_2\knowledge_base\Seraph.txt
+2025-09-27 18:11:55,308 INFO Start renaming
+2025-09-27 18:11:55,667 INFO Renaming is succsses
+2025-09-27 18:11:55,667 INFO Parsing is succsses
+2025-09-27 18:11:55,667 INFO Save is succsses
+2025-09-27 18:11:55,667 INFO Load by url https://matrix.fandom.com/wiki/Matrix
+2025-09-27 18:11:56,428 INFO Start generate task_2\knowledge_base\Matrix.txt
+2025-09-27 18:11:56,428 INFO Start renaming
+2025-09-27 18:11:57,110 INFO Renaming is succsses
+2025-09-27 18:11:57,111 INFO Parsing is succsses
+2025-09-27 18:11:57,111 INFO Save is succsses
+2025-09-27 18:11:57,111 INFO Load by url https://matrix.fandom.com/wiki/The_Architect
+2025-09-27 18:11:57,942 INFO Start generate task_2\knowledge_base\The Architect.txt
+2025-09-27 18:11:57,942 INFO Start renaming
+2025-09-27 18:11:58,335 INFO Renaming is succsses
+2025-09-27 18:11:58,335 INFO Parsing is succsses
+2025-09-27 18:11:58,336 INFO Save is succsses
+2025-09-27 18:11:58,336 INFO Load by url https://matrix.fandom.com/wiki/Morpheus
+2025-09-27 18:11:58,806 INFO Start generate task_2\knowledge_base\Morpheus.txt
+2025-09-27 18:11:58,806 INFO Start renaming
+2025-09-27 18:11:59,410 INFO Renaming is succsses
+2025-09-27 18:11:59,411 INFO Parsing is succsses
+2025-09-27 18:11:59,411 INFO Save is succsses
+2025-09-27 18:11:59,411 INFO Load by url https://matrix.fandom.com/wiki/The_Oracle
+2025-09-27 18:11:59,898 INFO Start generate task_2\knowledge_base\The Oracle.txt
+2025-09-27 18:11:59,898 INFO Start renaming
+2025-09-27 18:12:00,242 INFO Renaming is succsses
+2025-09-27 18:12:00,242 INFO Parsing is succsses
+2025-09-27 18:12:00,243 INFO Save is succsses
+2025-09-27 18:12:00,243 INFO Load by url https://matrix.fandom.com/wiki/The_Merovingian
+2025-09-27 18:12:01,009 INFO Start generate task_2\knowledge_base\The Merovingian.txt
+2025-09-27 18:12:01,009 INFO Start renaming
+2025-09-27 18:12:01,500 INFO Renaming is succsses
+2025-09-27 18:12:01,500 INFO Parsing is succsses
+2025-09-27 18:12:01,501 INFO Save is succsses
+2025-09-27 18:12:01,510 INFO 127.0.0.1 - - [27/Sep/2025 18:12:01] "GET /scrapy HTTP/1.1" 200 -
+2025-09-27 18:12:17,534 INFO Find a new inem in file_map
+2025-09-27 18:12:17,535 INFO 127.0.0.1 - - [27/Sep/2025 18:12:17] "GET /check HTTP/1.1" 200 -
+2025-09-27 18:15:39,934 INFO Find a new inem in file_map
+2025-09-27 18:15:39,936 INFO 127.0.0.1 - - [27/Sep/2025 18:15:39] "GET /check HTTP/1.1" 200 -
+2025-09-27 18:17:02,963 INFO Find a new inem in file_map
