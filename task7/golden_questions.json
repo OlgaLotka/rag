@@ -1,0 +1,8 @@
+{
+    "Which room did Zeus live in?" : "'\\b(101)\\b', '\\b(one)\\b'",
+    "Which room did  My God live in?": "'\\b(101)\\b', '\\b(one)\\b'",
+    "Tell me about Zion":"'\\b(do not know)\\b', '\\b(don't know)\\b'",
+    "Was Gera in Kemerovo?": "Yes",
+    "Is Poseidon familiar with Hera?": "Yes",
+    "Where did the Lilliputians live?" : "Olympus"
+}

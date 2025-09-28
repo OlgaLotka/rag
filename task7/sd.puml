@@ -1,0 +1,13 @@
+@startuml
+golden_questions_file -> evaluate: Получаем фал с вопросами
+evaluate -> llm: Отправляем вопрос
+llm --> evaluate: получаем ответ
+evaluate -> evaluate: смотрим сколько документов нашли
+evaluate -> evaluate: получаем result
+evaluate -> matcher: сравниваем с ожидаемым ответом
+matcher --> evaluate: делаем вывод о качестве полученного ответа
+
+
+
+
+@enduml
