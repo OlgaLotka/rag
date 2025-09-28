@@ -14,7 +14,7 @@ def openJson(name):
 urls = openJson('task_2\\file_map.json')
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO, filename="py_log.log",filemode="w")
+logging.basicConfig(level=logging.INFO, filename="generate_files_log.log",filemode="w", format="%(asctime)s %(levelname)s %(message)s")
 
 app = Flask(__name__)
 
@@ -50,10 +50,11 @@ def scrapy():
             'User-Agent': 'PostmanRuntime/7.45.0'
         }
     for k,v in urls.items():
+        logger.info(f"Load by url {v}")
         r = requests.get(v, headers)
         filename = 'task_2\knowledge_base\\' + k + '.txt'
         with open(filename, 'w', encoding="utf-8") as output_file:
-            print(filename)
+            logger.info(f"Start generate {filename}")
             t = parse_user_datafile_bs(r.text, rename)
             logger.info(f"Parsing is succsses")
             output_file.write(t)
@@ -63,7 +64,8 @@ def scrapy():
 def check():
     logger.info(f"Find a new inem in file_map")
     cpt = sum([len(files) for r, d, files in os.walk("task_2\knowledge_base")])
-    if (len(urls) != cpt):
+    url2 = openJson('task_2\\file_map.json')
+    if (len(url2) != cpt):
         logger.info('new files is present')
         #scrapy()
     return cpt
