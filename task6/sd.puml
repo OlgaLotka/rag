@@ -1,0 +1,15 @@
+@startuml
+cron -> script: запускаем раз в сутки
+script -> file_map: Проверяем ли есть ли есть ли новые записи в файле
+script -> knowledge_base: Проверяем сколько фалов папке
+script -> script: смотрим разницу в количестве файлов указанных в файле и папке
+script --> script: Количество отличается
+script -> "https://matrix.fandom.com": обращаемся к ссылке
+script <-- "https://matrix.fandom.com": скачиваем контент
+script -> script: парсим контент и заменяем термины
+script -> chunks: разбиваем файл на чанки
+script <-- chunks: получаем чанки
+script -> Embeddings: генерим енбендинги
+script -> FAISS: сохраняем индекс
+
+@enduml
