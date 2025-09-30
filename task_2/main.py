@@ -2,10 +2,11 @@ from flask import Flask, request, jsonify
 import requests
 from bs4 import BeautifulSoup
 import json, os, logging, datetime
-import schedule
+import schedule, time, asyncio
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
+from scheduler import Scheduler
 
 def openJson(name):
     with open(name, 'r') as input_file:
@@ -21,6 +22,8 @@ model_name = "mixedbread-ai/mxbai-embed-large-v1"
 model = HuggingFaceEmbeddings(model_name = model_name)
 
 app = Flask(__name__)
+
+scheduler = Scheduler()
 
 def generate_emb(name):
     logger.info(f"Generate Embeddings")
@@ -110,11 +113,18 @@ def check22():
         generate_emb('task_2\knowledge_base')
     return 200
 
+def schedule1():
+
+
+    scheduler.cyclic(datetime.timedelta(minutes=1), check22)
+    while True:
+        scheduler.exec_jobs()
+        time.sleep(10)
 
 if __name__ == '__main__':
-
-    #check()
+    schedule1()
     app.run(host="0.0.0.0", port=8084, debug=True)
+
 
 
     
